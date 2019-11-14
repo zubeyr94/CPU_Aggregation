@@ -25,15 +25,16 @@ using std::size_t;
 
 #include "table.h"
 #include "utility"
+#include "Barrier.h"
  
-// custom hash can be a standalone function object:
+// Custom Hash: Multiply-Shift
 class MyHash
 {
 	public:
 		std::size_t operator()(const int & s) const noexcept
 		{
 			unsigned int z = 2191554561;
-			return (s*z) >> (32-LOGGROUPS-1); // or use boost::hash_combine (see Discussion)
+			return (s*z) >> (32-LOGGROUPS-1);
 		}
 };
 
@@ -52,6 +53,9 @@ class Aggregator {
 		size_t aattr;
 		vector<robin_map<int, int, MyHash> > hashTables;
 		vector<pair<int*, size_t> > partitions;
-
+		PThreadLockCVBarrier* barrier;
+		PThreadLockCVBarrier* barrierHalf;
+		int mergeDistance;
+		int mergeDistancePrev;
 };
 

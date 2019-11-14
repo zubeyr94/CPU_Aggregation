@@ -43,20 +43,20 @@ seed = [1097392880, 1017527545, 1977980431, 534552014, 301049910, 556768788, 191
 
 if skew > 1:
 
-	for i in range(int(numOfTuples/maxkeyval)):
-	    values = numpy.random.zipf(skew, maxkeyval);
-	    values = (values-1)%maxkeyval;
-	    random.shuffle(values);
+    for i in range(8):
+        values = numpy.random.zipf(skew, int(numOfTuples/8));
+        values = (values-1)%maxkeyval;
+        random.shuffle(values);
 
 	    #keys = random.sample(range(1, (1 << 31)-1), maxkeyval);
 
-	    for i in range(len(values)):
-	            print(str(seed[values[i]]) + '|' + str(1));
+        for i in range(len(values)):
+            print(str(seed[values[i]]) + '|' + str(1));
 
 else:
-	for i in range(int(numOfTuples/maxkeyval)):
-	    values = list(range(0, maxkeyval));
-	    random.shuffle(values);
+    for j in range(8):
+        values = list(range(0, int(numOfTuples/8)));
+        random.shuffle(values);
 		
 	    #keys=[];
 	    #for i in range(maxkeyval):
@@ -64,5 +64,5 @@ else:
 	    
 	    #keys = random.sample(range(1, (1 << 31)-1), maxkeyval);
 	                                                                                                               
-	    for i in range(len(values)):
-	        print(str(seed[values[i]]) + '|' + str(1));
+        for i in range(len(values)):
+            print(str(seed[values[i]%maxkeyval]) + '|' + str(1));

@@ -11,7 +11,7 @@ make -C ../aggregate_robinhood_murmur/
 
 mkdir $1
 for skew in 0; do
-	datasize=$(($size*1024*1000*1000))
+	datasize=$(($size*1000*1000*1000))
 	numOfTuples=$(($datasize/$tuplesize))
 	echo "" > $1/raw_results_${size}_${skew}.txt
 	for logGroupSize in ${logGroupSizes[@]} ; do

@@ -28,10 +28,11 @@ void Aggregator::init(int numOfGroups, int nothreads, size_t gattr, size_t aattr
 	this->nothreads = nothreads;
 	this->gattr = gattr;
 	this->aattr = aattr;
+	this->barrier = new PThreadLockCVBarrier(nothreads);
 
 	for( int i=0; i<nothreads; ++i){
 		robin_map<int, int, MyHash> hashTable;
-		hashTable.reserve(numOfGroups*2);
+		hashTable.reserve(numOfGroups*2); //do not reserve if the number of groups high(>2048)
 		hashTables.push_back(hashTable);
 	}
 
@@ -62,25 +63,71 @@ void Aggregator::localBuild(pair<int*, size_t> partition, int threadid)
 }
 
 void Aggregator::merge(int threadid)
-{
-	
-	if(threadid!=0) return;
-	for(int i=1; i<nothreads; i++)
-	{
-		for(auto it:hashTables[i])
-		{
-			pair<robin_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
+{	
+	if(threadid==0){
+		mergeDistance=nothreads/2;
+		mergeDistancePrev=nothreads;
+		barrierHalf = new PThreadLockCVBarrier(mergeDistance);
+	}
 
-			if(!result.second){
-				result.first.value() += it.second;
-			}
+	barrier->Arrive();
+
+	while(mergeDistance>0)
+	{
+		if(threadid>=mergeDistance) return;
+	
+		barrierHalf->Arrive();
+			
+		if(threadid==0)
+		{
+			delete barrier;
+			barrier = new PThreadLockCVBarrier(mergeDistance);
 		}
+
+		barrierHalf->Arrive();
+
+		if(threadid==mergeDistance-1){
+			for(int i=threadid+mergeDistance; i<mergeDistancePrev; i++)
+			{
+				for(auto it:hashTables[i])
+				{
+					pair<robin_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
+		
+					if(!result.second){
+						result.first.value() += it.second;
+					}
+				}
+			}
+	
+		}
+		else{
+			for(auto it:hashTables[threadid+mergeDistance])
+			{
+				pair<robin_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
+		
+				if(!result.second){
+					result.first.value() += it.second;
+				}
+			}					
+		}
+
+		barrier->Arrive();
+
+		if(threadid==0){
+			mergeDistancePrev = mergeDistance;
+			mergeDistance/=2;
+
+			delete barrierHalf;
+			barrierHalf = new PThreadLockCVBarrier(mergeDistance);
+		}
+
+		barrier->Arrive();
 	}
 
 /*	robin_map<int,int,MyHash>::hasher fn = hashTables[threadid].hash_function();
                                                                                                                          
         for(auto it:hashTables[threadid])
         {                                                                                                                
-                cout << fn(it.first) << " " << it.first << "  " << it.second << " " << endl;                                                                                                       
+                cout << it.first << "  " << it.second << " " << endl;                                                                                                       
         }*/                                                                                                               
 }
