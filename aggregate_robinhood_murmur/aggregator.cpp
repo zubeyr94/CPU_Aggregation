@@ -124,10 +124,10 @@ void Aggregator::merge(int threadid)
 		barrier->Arrive();
 	}
 
-	robin_map<int,int,MyHash>::hasher fn = hashTables[threadid].hash_function();
+/*	robin_map<int,int,MyHash>::hasher fn = hashTables[threadid].hash_function();
                                                                                                                          
     for(auto it:hashTables[threadid])
     {                                                                                                                
             cout << it.first << "  " << it.second << " " << endl;                                                                                                       
-    }                                                                                                               
+    }*/                                                                                                               
 }

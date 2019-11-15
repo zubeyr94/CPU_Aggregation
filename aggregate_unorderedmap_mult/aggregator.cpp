@@ -91,7 +91,7 @@ void Aggregator::merge(int threadid)
 			{
 				for(auto it:hashTables[i])
 				{
-					pair<map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
+					pair<unordered_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
 
 					if(!result.second){
 						result.first->second += it.second;
@@ -103,7 +103,7 @@ void Aggregator::merge(int threadid)
 		else{
 			for(auto it:hashTables[threadid+mergeDistance])
 			{
-				pair<map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
+				pair<unordered_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
 
 				if(!result.second){
 					result.first->second += it.second;
@@ -124,8 +124,8 @@ void Aggregator::merge(int threadid)
 		barrier->Arrive();
 	}
 
-    for(auto it:hashTables[threadid])
+/*    for(auto it:hashTables[threadid])
     {
             cout << it.first << "  " << it.second << " " << endl;
-    }
+    }*/
 }

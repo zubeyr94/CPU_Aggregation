@@ -142,6 +142,7 @@ int main(int argc, char** argv) {
 	/* tin is loaded with data now */
 	//cout << "Running join algorithm... " << flush;
 	for(int i=0; i<5; i++){
+
 		initchkpt();
 	
 		partitioner = new Partitioner();

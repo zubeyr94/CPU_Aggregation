@@ -118,8 +118,8 @@ void Aggregator::merge(int threadid)
 		barrier->Arrive();
 	}
 
-    for(auto it:hashTables[threadid])
+/*    for(auto it:hashTables[threadid])
     {
             cout << it.first << "  " << it.second << " " << endl;
-    }
+    }*/
 }

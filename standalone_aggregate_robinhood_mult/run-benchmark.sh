@@ -2,7 +2,7 @@
 ###########################Change this snippet
 
 #Run queries
-logGroupSizes=(2) # 3 4 5 6 7 #8 9 10) # 4 8 16 32 64 128 256 512 1024)
+logGroupSizes=(6) #(2 3 4 5 6 7 8 9 10) # 4 8 16 32 64 128 256 512 1024)
 tuplesize=8
 size=$1
 
@@ -19,7 +19,7 @@ for skew in 0 ; do
 		#echo $groupSize
 		make logGroups=${logGroupSize} -C ../aggregate_robinhood_mult/	
 
-		/fastdisk/CPU_Aggregation/aggregate_robinhood_mult/aggregate /slowdisk/$size/$skew/data_${groupSize}.tbl 40 $groupSize $numOfTuples #&>> $1/raw_results_${size}_${skew}.txt
+		../aggregate_robinhood_mult/aggregate /slowdisk/$size/$skew/data_${groupSize}.tbl 40 $groupSize $numOfTuples &>> $1/raw_results_${size}_${skew}.txt
 
 		echo "" >> $1/raw_results_${size}_${skew}.txt
 	done
