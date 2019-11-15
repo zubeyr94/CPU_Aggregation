@@ -25,6 +25,7 @@ using std::size_t;
 
 #include "table.h"
 #include "utility"
+#include "Barrier.h"
  
 // custom hash can be a standalone function object:
 class MyHash
@@ -50,7 +51,11 @@ class Aggregator {
 		size_t gattr;
 		size_t aattr;
 		vector<unordered_map<int, int, MyHash> > hashTables;
-		vector<pair<int*, size_t > > partitions;
+		//vector<pair<int*, size_t > > partitions;
+		PThreadLockCVBarrier* barrier;
+		PThreadLockCVBarrier* barrierHalf;
+		int mergeDistance;
+		int mergeDistancePrev;
 
 };
 

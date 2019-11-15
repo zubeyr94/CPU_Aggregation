@@ -46,7 +46,7 @@ void Aggregator::localBuild(pair<int*, size_t> partition, int threadid)
 	for(int i=0; i<size;i++)
 	{
 		robin_map<int, int, MyHash>::iterator got = hashTables[threadid].find(data[index(i,gattr)]);
-		
+
 		if(got == hashTables[threadid].end()){
 			hashTables[threadid].insert({data[index(i,gattr)], data[index(i,aattr)]});
 		}
@@ -54,7 +54,7 @@ void Aggregator::localBuild(pair<int*, size_t> partition, int threadid)
 		{
 			got.value()+=data[index(i,aattr)];
 		}
-		
+
 	}
 
 	//unordered_map<int,int>::iterator got = hashTables[threadid].find(1);
@@ -63,7 +63,7 @@ void Aggregator::localBuild(pair<int*, size_t> partition, int threadid)
 }
 
 void Aggregator::merge(int threadid)
-{	
+{
 	if(threadid==0){
 		mergeDistance=nothreads/2;
 		mergeDistancePrev=nothreads;
@@ -75,9 +75,9 @@ void Aggregator::merge(int threadid)
 	while(mergeDistance>0)
 	{
 		if(threadid>=mergeDistance) return;
-	
+
 		barrierHalf->Arrive();
-			
+
 		if(threadid==0)
 		{
 			delete barrier;
@@ -92,23 +92,23 @@ void Aggregator::merge(int threadid)
 				for(auto it:hashTables[i])
 				{
 					pair<robin_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
-		
+
 					if(!result.second){
 						result.first.value() += it.second;
 					}
 				}
 			}
-	
+
 		}
 		else{
 			for(auto it:hashTables[threadid+mergeDistance])
 			{
 				pair<robin_map<int, int, MyHash>::iterator,bool> result = hashTables[threadid].emplace(it.first, it.second);
-		
+
 				if(!result.second){
 					result.first.value() += it.second;
 				}
-			}					
+			}
 		}
 
 		barrier->Arrive();
@@ -125,9 +125,9 @@ void Aggregator::merge(int threadid)
 	}
 
 /*	robin_map<int,int,MyHash>::hasher fn = hashTables[threadid].hash_function();
-                                                                                                                         
-        for(auto it:hashTables[threadid])
-        {                                                                                                                
-                cout << it.first << "  " << it.second << " " << endl;                                                                                                       
-        }*/                                                                                                               
+
+    for(auto it:hashTables[threadid])
+    {
+            cout << it.first << "  " << it.second << " " << endl;
+    }*/
 }

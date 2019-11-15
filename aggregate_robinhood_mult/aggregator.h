@@ -52,7 +52,7 @@ class Aggregator {
 		size_t gattr;
 		size_t aattr;
 		vector<robin_map<int, int, MyHash> > hashTables;
-		vector<pair<int*, size_t> > partitions;
+		//vector<pair<int*, size_t> > partitions;
 		PThreadLockCVBarrier* barrier;
 		PThreadLockCVBarrier* barrierHalf;
 		int mergeDistance;
