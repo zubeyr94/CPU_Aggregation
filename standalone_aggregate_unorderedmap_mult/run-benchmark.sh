@@ -8,7 +8,7 @@ size=$1
 thread=40
 
 mkdir $1
-for skew in 0 ; do
+for skew in 0 1.05 1.25 ; do
 	datasize=$(($size*1000*1000*1000))
 	numOfTuples=$(($datasize/$tuplesize))
 	echo "" > $1/raw_results_${size}_${skew}.txt

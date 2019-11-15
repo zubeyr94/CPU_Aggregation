@@ -43,7 +43,11 @@ class Aggregator {
 		Aggregator(){};
 		~Aggregator(){};
 		void init(int numOfGroups, int nothreads, size_t gattr, size_t aattr);
+		
+		/*Build the local hash tables for each threads*/
 		void localBuild(pair<int*, size_t> partition, int threadid);
+		
+		/*Merge the local hash tables*/
 		void merge(int threadid);
 
 	private:
