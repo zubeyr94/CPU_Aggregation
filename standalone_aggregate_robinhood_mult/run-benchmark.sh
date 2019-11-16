@@ -2,7 +2,7 @@
 ###########################Change this snippet
 
 #Run queries
-logGroupSizes=(2 3 4 5 6 7 8 9 10) # 4 8 16 32 64 128 256 512 1024)
+logGroupSizes=(2 3 4 5 6) # 7 8 9 10) # 4 8 16 32 64 128 256 512 1024)
 tuplesize=8
 size=$1
 thread=40
